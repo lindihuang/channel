@@ -1,0 +1,149 @@
+/*********************************************************************************************/
+
+【*】 程序简介 
+-工程名称：工程模版
+-实验平台: 秉火STM32 F429 开发板
+-MDK版本：5.16
+-ST固件库版本：1.5.1
+
+
+【 ！！】功能简介：
+秉火STM32F429 工程模板，以后使用它建立新项目，方便快捷。
+
+学习目的：学会如何建立工程模板，了解STM32库文件。
+
+/*********************************************************************************************/
+
+【*】 时钟
+
+A.晶振：
+-外部高速晶振：25MHz
+-RTC晶振：32.768KHz
+
+B.各总线运行时钟：
+-系统时钟 = SYCCLK = AHB1 = 180MHz
+-APB2 = 90MHz 
+-APB1 = 45MHz
+
+C.浮点运算单元：
+  使能
+
+
+/*********************************************************************************************/
+
+【*】 版本
+
+-程序版本：1.0
+-发布日期：2015-10
+
+-版本更新说明：首次发布
+
+/*********************************************************************************************/
+
+【*】 联系我们
+
+-秉火论坛    :http://www.firebbs.cn
+-淘宝店铺    :http://firestm32.taobao.com
+		  if((ucSCoilBuf[1]&0x01)&&(0<=(Timer5_cout-test_data5.d))&&((Timer5_cout-test_data5.d)<=test_data6.d)&&(ucSCoilBuf[1]&0x20))
+			{
+				  test_data9.d=(Timer5_cout-test_data5.d)*0.1;
+					usSRegInBuf[6]=test_data9.value[3];
+					usSRegInBuf[6]=(usSRegInBuf[6]<<8)+test_data9.value[2];
+					usSRegInBuf[7]=test_data9.value[1];
+					usSRegInBuf[7]=(usSRegInBuf[7]<<8)+test_data9.value[0];
+			}
+			else if((ucSCoilBuf[1]&0x02)&&(0<=(Timer5_cout-test_data5.d-test_data6.d))&&((Timer5_cout-test_data5.d-test_data6.d)<=test_data2.d)&&(ucSCoilBuf[1]&0x20))
+			{
+				  test_data10.d=(Timer5_cout-test_data5.d-test_data6.d)*0.1;
+					usSRegInBuf[8]=test_data10.value[3];
+					usSRegInBuf[8]=(usSRegInBuf[8]<<8)+test_data10.value[2];
+					usSRegInBuf[9]=test_data10.value[1];
+					usSRegInBuf[9]=(usSRegInBuf[9]<<8)+test_data10.value[0];
+			}
+			else if((ucSCoilBuf[1]&0x02)&&(0<=(Timer5_cout-test_data5.d-test_data6.d-test_data2.d))&&((Timer5_cout-test_data5.d-test_data6.d-test_data2.d)<=test_data3.d)
+				       &&(ucSCoilBuf[1]&0x20))
+			{
+				  test_data9.d=(Timer5_cout-test_data5.d-test_data6.d-test_data2.d)*0.1;
+					usSRegInBuf[10]=test_data11.value[3];
+					usSRegInBuf[10]=(usSRegInBuf[10]<<8)+test_data11.value[2];
+					usSRegInBuf[11]=test_data11.value[1];
+					usSRegInBuf[11]=(usSRegInBuf[11]<<8)+test_data11.value[0];
+			}
+			else if((ucSCoilBuf[1]&0x02)&&(0<=(Timer5_cout-test_data5.d-test_data6.d-test_data2.d-test_data3.d))&&((Timer5_cout-test_data5.d-test_data6.d-test_data2.d-test_data3.d)<=test_data4.d)
+				       &&(ucSCoilBuf[1]&0x20))
+			{
+				  test_data9.d=(Timer5_cout-test_data5.d-test_data6.d-test_data2.d-test_data3.d)*0.1;
+					usSRegInBuf[12]=test_data12.value[3];
+					usSRegInBuf[12]=(usSRegInBuf[12]<<8)+test_data12.value[2];
+					usSRegInBuf[13]=test_data12.value[1];
+					usSRegInBuf[13]=(usSRegInBuf[13]<<8)+test_data12.value[0];
+			}
+			else if((ucSCoilBuf[1]&0x02)&&(0<=(Timer5_cout-test_data5.d-test_data6.d-test_data2.d-test_data3.d-test_data4.d))&&((Timer5_cout-test_data5.d-test_data6.d-test_data2.d-test_data3.d-test_data4.d)<=test_data5.d)
+				       &&(ucSCoilBuf[1]&0x20))
+			{
+				  test_data9.d=(Timer5_cout-test_data5.d-test_data6.d-test_data2.d-test_data3.d-test_data4.d)*0.1;
+					usSRegInBuf[14]=test_data13.value[3];
+					usSRegInBuf[14]=(usSRegInBuf[14]<<8)+test_data13.value[2];
+					usSRegInBuf[15]=test_data13.value[1];
+					usSRegInBuf[15]=(usSRegInBuf[15]<<8)+test_data13.value[0];
+			}
+			else if((ucSCoilBuf[1]&0x01)&&(0<=(Timer5_cout-test_data5.d))&&((Timer5_cout-test_data5.d)<=test_data6.d)&&(!(ucSCoilBuf[1]&0x20)))
+			{
+				  test_data9.d=(Timer5_cout-test_data5.d)*0.1;
+					usSRegInBuf[6]=test_data9.value[3];
+					usSRegInBuf[6]=(usSRegInBuf[6]<<8)+test_data9.value[2];
+					usSRegInBuf[7]=test_data9.value[1];
+					usSRegInBuf[7]=(usSRegInBuf[7]<<8)+test_data9.value[0];
+			}
+			else if((ucSCoilBuf[1]&0x02)&&(0<=(Timer5_cout-test_data5.d-test_data6.d))&&((Timer5_cout-test_data5.d-test_data6.d)<=test_data3.d)
+				       &&(!(ucSCoilBuf[1]&0x20)))
+			{
+				  test_data9.d=(Timer5_cout-test_data5.d-test_data6.d)*0.1;
+					usSRegInBuf[10]=test_data11.value[3];
+					usSRegInBuf[10]=(usSRegInBuf[10]<<8)+test_data11.value[2];
+					usSRegInBuf[11]=test_data11.value[1];
+					usSRegInBuf[11]=(usSRegInBuf[11]<<8)+test_data11.value[0];
+			}
+			else if((ucSCoilBuf[1]&0x02)&&(0<=(Timer5_cout-test_data5.d-test_data6.d-test_data3.d))&&((Timer5_cout-test_data5.d-test_data6.d-test_data3.d)<=test_data4.d)
+				       &&(!(ucSCoilBuf[1]&0x20)))
+			{
+				  test_data9.d=(Timer5_cout-test_data5.d-test_data6.d-test_data3.d)*0.1;
+					usSRegInBuf[12]=test_data12.value[3];
+					usSRegInBuf[12]=(usSRegInBuf[12]<<8)+test_data12.value[2];
+					usSRegInBuf[13]=test_data12.value[1];
+					usSRegInBuf[13]=(usSRegInBuf[13]<<8)+test_data12.value[0];
+			}
+			else if((ucSCoilBuf[1]&0x02)&&(0<=(Timer5_cout-test_data5.d-test_data6.d-test_data3.d-test_data4.d))&&((Timer5_cout-test_data5.d-test_data6.d-test_data3.d-test_data4.d)<=test_data5.d)
+				       &&(!(ucSCoilBuf[1]&0x20)))
+			{
+				  test_data9.d=(Timer5_cout-test_data5.d-test_data6.d-test_data3.d-test_data4.d)*0.1;
+					usSRegInBuf[14]=test_data13.value[3];
+					usSRegInBuf[14]=(usSRegInBuf[14]<<8)+test_data13.value[2];
+					usSRegInBuf[15]=test_data13.value[1];
+					usSRegInBuf[15]=(usSRegInBuf[15]<<8)+test_data13.value[0];
+			}		test_data9.d=0;
+		usSRegInBuf[6]=test_data9.value[3];
+		usSRegInBuf[6]=(usSRegInBuf[6]<<8)+test_data9.value[2];
+		usSRegInBuf[7]=test_data9.value[1];
+		usSRegInBuf[7]=(usSRegInBuf[7]<<8)+test_data9.value[0];
+		test_data10.d=0;
+		usSRegInBuf[8]=test_data10.value[3];
+		usSRegInBuf[8]=(usSRegInBuf[8]<<8)+test_data10.value[2];
+		usSRegInBuf[9]=test_data10.value[1];
+		usSRegInBuf[9]=(usSRegInBuf[9]<<8)+test_data10.value[0];
+		test_data9.d=0;
+		usSRegInBuf[10]=test_data11.value[3];
+		usSRegInBuf[10]=(usSRegInBuf[10]<<8)+test_data11.value[2];
+		usSRegInBuf[11]=test_data11.value[1];
+		usSRegInBuf[11]=(usSRegInBuf[11]<<8)+test_data11.value[0];
+		test_data9.d=0;
+		usSRegInBuf[12]=test_data12.value[3];
+		usSRegInBuf[12]=(usSRegInBuf[12]<<8)+test_data12.value[2];
+		usSRegInBuf[13]=test_data12.value[1];
+		usSRegInBuf[13]=(usSRegInBuf[13]<<8)+test_data12.value[0];
+		test_data9.d=0;
+		usSRegInBuf[14]=test_data13.value[3];
+		usSRegInBuf[14]=(usSRegInBuf[14]<<8)+test_data13.value[2];
+		usSRegInBuf[15]=test_data13.value[1];
+		usSRegInBuf[15]=(usSRegInBuf[15]<<8)+test_data13.value[0];
+/*********************************************************************************************/
