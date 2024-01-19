@@ -19,17 +19,17 @@
 /****************************************定时器3*********************************************************************/
 static void TIMx_NVIC_Configuration(void)
 {
-    NVIC_InitTypeDef NVIC_InitStructure; 
-    // 设置中断组为0
-    NVIC_PriorityGroupConfig(NVIC_PriorityGroup_0);		
-		// 设置中断来源
-    NVIC_InitStructure.NVIC_IRQChannel = GENERAL_TIM_IRQn; 	
-		// 设置抢占优先级
-    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;	 
-	  // 设置子优先级
-    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 3;	
-    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-    NVIC_Init(&NVIC_InitStructure);
+	NVIC_InitTypeDef NVIC_InitStructure; 
+	// 设置中断组为0
+	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_0);		
+	// 设置中断来源
+	NVIC_InitStructure.NVIC_IRQChannel = GENERAL_TIM_IRQn; 	
+	// 设置抢占优先级
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;	 
+	// 设置子优先级
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 3;	
+	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+	NVIC_Init(&NVIC_InitStructure);
 }
 
 /**
@@ -85,17 +85,17 @@ void TIMx_Configuration(void)
 /****************************************定时器4*********************************************************************/
 static void TIM4_NVIC_Configuration(void)
 {
-    NVIC_InitTypeDef NVIC_InitStructure; 
-    // 设置中断组为0
-    NVIC_PriorityGroupConfig(NVIC_PriorityGroup_0);		
-		// 设置中断来源
-    NVIC_InitStructure.NVIC_IRQChannel = GENERAL_TIM4_IRQn; 	
-		// 设置抢占优先级
-    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 2;	 
-	  // 设置子优先级
-    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 2;	
-    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-    NVIC_Init(&NVIC_InitStructure);
+	NVIC_InitTypeDef NVIC_InitStructure; 
+	// 设置中断组为0
+	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_0);		
+	// 设置中断来源
+	NVIC_InitStructure.NVIC_IRQChannel = GENERAL_TIM4_IRQn; 	
+	// 设置抢占优先级
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 2;	 
+	// 设置子优先级
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 2;	
+	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+	NVIC_Init(&NVIC_InitStructure);
 }
 
 /**

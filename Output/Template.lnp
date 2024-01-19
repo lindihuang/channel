@@ -1,4 +1,4 @@
---cpu=Cortex-M4.fp
+--cpu Cortex-M4.fp
 "..\..\output\startup_stm32f429_439xx.o"
 "..\..\output\system_stm32f4xx.o"
 "..\..\output\misc.o"
@@ -49,7 +49,6 @@
 "..\..\output\bsp_systick.o"
 "..\..\output\bsp_debug_usart.o"
 "..\..\output\timer5.o"
-"..\..\output\key.o"
 "..\..\output\timer1.o"
 "..\..\output\bsp_exti.o"
 "..\..\output\data_processing.o"

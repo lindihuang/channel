@@ -2,11 +2,9 @@
 #include "mb.h"
 //#include "modbus.h"
 
-
-
 void Timer5_config(void)
 {
-		 	NVIC_InitTypeDef NVIC_InitStructure;
+	NVIC_InitTypeDef NVIC_InitStructure;
 	TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
 
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM5, ENABLE);
@@ -47,6 +45,5 @@ void Timer5_config(void)
 	TIM_ITConfig(TIM5, TIM_IT_Update, DISABLE);
 	//¶¨Ê±Æ÷3½ûÄÜ
 	TIM_Cmd(TIM5, DISABLE);
-
 }
 

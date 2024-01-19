@@ -8,14 +8,13 @@
 #include "main.h"
 #include "bsp_SysTick.h"
 #include "new.h"
+
 float  Timer5_cout;
 float  Timer4_cout;
 float  Timer3_cout;
 float  Timer1_cout;
-static void Delay(__IO uint32_t nCount)	 //简单的延时函数
-{
-	for(; nCount != 0; nCount--);
-}
+
+
 
 uint16_t GS_Flag=0;
 
@@ -78,47 +77,41 @@ USHORT   usSRegHoldBuf[250]           ;
 //出口参数：eMBErrorCode : 这个函数将返回的错误码
 //备    注：Editor：Armink 2010-10-31    Company: BXXJS   3区
 //**********************************************************************************
-eMBErrorCode
-eMBRegInputCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs )
+eMBErrorCode eMBRegInputCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs )
 {
-    eMBErrorCode    eStatus = MB_ENOERR;
-    int             iRegIndex;
-    USHORT *        pusRegInputBuf;
+	eMBErrorCode    eStatus = MB_ENOERR;
+	int             iRegIndex;
+	USHORT *        pusRegInputBuf;
 //	    float *        pusRegInputBuf;
-    UCHAR           REG_INPUT_START;
-    UCHAR           REG_INPUT_NREGS;
-    UCHAR           usRegInStart;
-	  
-	      	pusRegInputBuf = usSRegInBuf;
-    	REG_INPUT_START = S_REG_INPUT_START;
-    	REG_INPUT_NREGS = S_REG_INPUT_NREGS;
-    	usRegInStart = usSRegInStart;
+	UCHAR           REG_INPUT_START;
+	UCHAR           REG_INPUT_NREGS;
+	UCHAR           usRegInStart;
+
+	pusRegInputBuf = usSRegInBuf;
+	REG_INPUT_START = S_REG_INPUT_START;
+	REG_INPUT_NREGS = S_REG_INPUT_NREGS;
+	usRegInStart = usSRegInStart;
 	
-	
-	
+	if((usAddress >= REG_INPUT_START)
+	&& (usAddress + usNRegs <= REG_INPUT_START + REG_INPUT_NREGS))
+	{
+		iRegIndex = ( int )( usAddress - usRegInStart );
+		
+		while( usNRegs > 0 )
+		{
+			*pucRegBuffer++ = ( unsigned char )( pusRegInputBuf[iRegIndex] >> 8 );
+			*pucRegBuffer++ = ( unsigned char )( pusRegInputBuf[iRegIndex] & 0xFF );
 
+			iRegIndex++;
+			usNRegs--;
+		}
+	}
+	else
+	{
+		eStatus = MB_ENOREG;
+	}
 
-
-    if( ( usAddress >= REG_INPUT_START )
-        && ( usAddress + usNRegs <= REG_INPUT_START + REG_INPUT_NREGS ) )
-    {
-        iRegIndex = ( int )( usAddress - usRegInStart );
-        while( usNRegs > 0 )
-        {
-
-				*pucRegBuffer++ = ( unsigned char )( pusRegInputBuf[iRegIndex] >> 8 );
-				*pucRegBuffer++ = ( unsigned char )( pusRegInputBuf[iRegIndex] & 0xFF );
-
-            iRegIndex++;
-            usNRegs--;
-        }
-    }
-    else
-    {
-        eStatus = MB_ENOREG;
-    }
-
-    return eStatus;
+	return eStatus;
 }
 //******************************保持寄存器回调函数**********************************
 //函数定义: eMBErrorCode eMBRegHoldingCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs, eMBRegisterMode eMode )
@@ -139,57 +132,55 @@ eMBRegInputCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs )
 eMBErrorCode
 eMBRegHoldingCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs, eMBRegisterMode eMode )
 {
-    eMBErrorCode    eStatus = MB_ENOERR;
-    int             iRegIndex;
-    USHORT *        pusRegHoldingBuf;
-    UCHAR           REG_HOLDING_START;
-    UCHAR           REG_HOLDING_NREGS;
-    UCHAR           usRegHoldStart;
-      
+	eMBErrorCode    eStatus = MB_ENOERR;
+	int             iRegIndex;
+	USHORT *        pusRegHoldingBuf;
+	UCHAR           REG_HOLDING_START;
+	UCHAR           REG_HOLDING_NREGS;
+	UCHAR           usRegHoldStart;
+
+
+	pusRegHoldingBuf = usSRegHoldBuf;
+	REG_HOLDING_START = S_REG_HOLDING_START;
+	REG_HOLDING_NREGS = S_REG_HOLDING_NREGS;
+	usRegHoldStart = usSRegHoldStart;
 	
-	    	pusRegHoldingBuf = usSRegHoldBuf;
-    	REG_HOLDING_START = S_REG_HOLDING_START;
-    	REG_HOLDING_NREGS = S_REG_HOLDING_NREGS;
-    	usRegHoldStart = usSRegHoldStart;
-	
+	if( ( usAddress >= REG_HOLDING_START ) &&
+			( usAddress + usNRegs <= REG_HOLDING_START + REG_HOLDING_NREGS ))
+	{
+		iRegIndex = ( int )( usAddress - usRegHoldStart );
+		
+		switch (eMode)
+		{
+			/* Pass current register values to the protocol stack. */
+			case MB_REG_READ:
+				while(usNRegs > 0)
+				{
+					*pucRegBuffer++ = ( unsigned char )( pusRegHoldingBuf[iRegIndex] >> 8 );
+					*pucRegBuffer++ = ( unsigned char )( pusRegHoldingBuf[iRegIndex] & 0xFF );
+					iRegIndex++;
+					usNRegs--;
+				}
+				break;
 
-
-
-    if( ( usAddress >= REG_HOLDING_START ) &&
-        ( usAddress + usNRegs <= REG_HOLDING_START + REG_HOLDING_NREGS ) )
-    {
-        iRegIndex = ( int )( usAddress - usRegHoldStart );
-        switch ( eMode )
-        {
-            /* Pass current register values to the protocol stack. */
-        case MB_REG_READ:
-            while( usNRegs > 0 )
-            {
-				*pucRegBuffer++ = ( unsigned char )( pusRegHoldingBuf[iRegIndex] >> 8 );
-				*pucRegBuffer++ = ( unsigned char )( pusRegHoldingBuf[iRegIndex] & 0xFF );
-                iRegIndex++;
-                usNRegs--;
-            }
-            break;
-
-            /* Update current register values with new values from the
-             * protocol stack. */
-        case MB_REG_WRITE:
-            while( usNRegs > 0 )
-            {
-                pusRegHoldingBuf[iRegIndex] = *pucRegBuffer++ << 8;
-                pusRegHoldingBuf[iRegIndex] |= *pucRegBuffer++;
-                iRegIndex++;
-                usNRegs--;
-            }
-            break;
-        }
-    }
-    else
-    {
-        eStatus = MB_ENOREG;
-    }
-    return eStatus;
+			/* Update current register values with new values from the
+			 * protocol stack. */
+			case MB_REG_WRITE:
+				while( usNRegs > 0 )
+				{
+						pusRegHoldingBuf[iRegIndex] = *pucRegBuffer++ << 8;
+						pusRegHoldingBuf[iRegIndex] |= *pucRegBuffer++;
+						iRegIndex++;
+						usNRegs--;
+				}
+				break;
+		}
+	}
+	else
+	{
+		eStatus = MB_ENOREG;
+	}
+	return eStatus;
 }
 //****************************线圈状态寄存器回调函数********************************
 //函数定义: eMBErrorCode eMBRegCoilsCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNCoils, eMBRegisterMode eMode )
@@ -209,55 +200,53 @@ eMBRegHoldingCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs, eMBRegi
 eMBErrorCode
 eMBRegCoilsCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNCoils, eMBRegisterMode eMode )
 {
-    eMBErrorCode    eStatus = MB_ENOERR;
-    int             iRegIndex , iRegBitIndex , iNReg;
+	eMBErrorCode    eStatus = MB_ENOERR;
+	int             iRegIndex , iRegBitIndex , iNReg;
 
-    iNReg =  usNCoils / 8 + 1;        //占用寄存器数量
+	iNReg =  usNCoils / 8 + 1;        //占用寄存器数量
 
-  
+	if(( usAddress >= S_COIL_START ) &&
+			(usAddress + usNCoils <= S_COIL_START + S_COIL_NCOILS))
+	{
+		iRegIndex    = (int)( usAddress - S_COIL_START ) / 8 ;    //每个寄存器存8个
+		iRegBitIndex = (int)( usAddress - usSCoilStart ) % 8 ;	  //相对于寄存器内部的位地址
+		
+		switch (eMode)
+		{
+			/* Pass current coil values to the protocol stack. */
+			case MB_REG_READ:
+					while(iNReg > 0)
+					{
+						*pucRegBuffer++ = xMBUtilGetBits(&ucSCoilBuf[iRegIndex++] , iRegBitIndex , 8);
+						iNReg --;
+					}
+					pucRegBuffer --;
+					usNCoils = usNCoils % 8;                         //余下的线圈数	
+					*pucRegBuffer = *pucRegBuffer << (8 - usNCoils); //高位补零
+					*pucRegBuffer = *pucRegBuffer >> (8 - usNCoils);
+					break;
 
-    if( ( usAddress >= S_COIL_START ) &&
-        ( usAddress + usNCoils <= S_COIL_START + S_COIL_NCOILS ) )
-    {
-        iRegIndex    = ( int )( usAddress - S_COIL_START ) / 8 ;    //每个寄存器存8个
-		iRegBitIndex = ( int )( usAddress - usSCoilStart ) % 8 ;	   //相对于寄存器内部的位地址
-        switch ( eMode )
-        {
-            /* Pass current coil values to the protocol stack. */
-        case MB_REG_READ:
-            while( iNReg > 0 )
-            {
-								*pucRegBuffer++ = xMBUtilGetBits(&ucSCoilBuf[iRegIndex++] , iRegBitIndex , 8);
-                iNReg --;
-            }
-						pucRegBuffer --;
-						usNCoils = usNCoils % 8;                        //余下的线圈数	
-						*pucRegBuffer = *pucRegBuffer <<(8 - usNCoils); //高位补零
-						*pucRegBuffer = *pucRegBuffer >>(8 - usNCoils);
-            break;
-
-            /* Update current coil values with new values from the
-             * protocol stack. */
-        case MB_REG_WRITE:
-            while(iNReg > 1)									 //最后面余下来的数单独算
-            {
-				xMBUtilSetBits(&ucSCoilBuf[iRegIndex++] , iRegBitIndex  , 8 , *pucRegBuffer++);
-                iNReg--;
-            }
-			usNCoils = usNCoils % 8;                            //余下的线圈数
-			if (usNCoils != 0)                                  //xMBUtilSetBits方法 在操作位数量为0时存在bug
-			{
-				xMBUtilSetBits(&ucSCoilBuf[iRegIndex++], iRegBitIndex, usNCoils,
-						*pucRegBuffer++);
-			}
-			break;
-        }
-    }
-    else
-    {
-        eStatus = MB_ENOREG;
-    }
-    return eStatus;
+			/* Update current coil values with new values from the protocol stack. */
+			case MB_REG_WRITE:
+					while(iNReg > 1)									 //最后面余下来的数单独算
+					{
+						xMBUtilSetBits(&ucSCoilBuf[iRegIndex++] , iRegBitIndex  , 8 , *pucRegBuffer++);
+						iNReg--;
+					}
+					usNCoils = usNCoils % 8;                            //余下的线圈数
+					if (usNCoils != 0)                                  //xMBUtilSetBits方法 在操作位数量为0时存在bug
+					{
+						xMBUtilSetBits(&ucSCoilBuf[iRegIndex++], iRegBitIndex, usNCoils,
+								*pucRegBuffer++);
+					}
+					break;
+		}
+	}
+	else
+	{
+		eStatus = MB_ENOREG;
+	}
+	return eStatus;
 }
 //****************************离散输入寄存器回调函数********************************
 //函数定义: eMBErrorCode eMBRegDiscreteCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNDiscrete )
@@ -273,47 +262,44 @@ eMBRegCoilsCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNCoils, eMBRegis
 eMBErrorCode
 eMBRegDiscreteCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNDiscrete )
 {
-    eMBErrorCode    eStatus = MB_ENOERR;
+  eMBErrorCode    eStatus = MB_ENOERR;
 	int             iRegIndex , iRegBitIndex , iNReg;
 	UCHAR *         pucDiscreteInputBuf;
-    UCHAR           DISCRETE_INPUT_START;
-    UCHAR           DISCRETE_INPUT_NDISCRETES;
-    UCHAR           usDiscreteInputStart;
+  UCHAR           DISCRETE_INPUT_START;
+  UCHAR           DISCRETE_INPUT_NDISCRETES;
+  UCHAR           usDiscreteInputStart;
 	iNReg =  usNDiscrete / 8 + 1;        //占用寄存器数量
     
+	pucDiscreteInputBuf = ucSDiscInBuf;
+	DISCRETE_INPUT_START = S_DISCRETE_INPUT_START;
+	DISCRETE_INPUT_NDISCRETES = S_DISCRETE_INPUT_NDISCRETES;
+	usDiscreteInputStart = usSDiscInStart;
+
+	pucDiscreteInputBuf[0] = 0x07;
 	
-	    	pucDiscreteInputBuf = ucSDiscInBuf;
-    	DISCRETE_INPUT_START = S_DISCRETE_INPUT_START;
-    	DISCRETE_INPUT_NDISCRETES = S_DISCRETE_INPUT_NDISCRETES;
-    	usDiscreteInputStart = usSDiscInStart;
+	if(( usAddress >= DISCRETE_INPUT_START)
+			&& (usAddress + usNDiscrete <= DISCRETE_INPUT_START + DISCRETE_INPUT_NDISCRETES))
+	{
+		iRegIndex    = (int)( usAddress - usDiscreteInputStart ) / 8 ;    //每个寄存器存8个
+		iRegBitIndex = (int)( usAddress - usDiscreteInputStart ) % 8 ;	  //相对于寄存器内部的位地址
 
-      pucDiscreteInputBuf[0]=0x07;
-    if( ( usAddress >= DISCRETE_INPUT_START )
-        && ( usAddress + usNDiscrete <= DISCRETE_INPUT_START + DISCRETE_INPUT_NDISCRETES ) )
-    {
-				iRegIndex    = ( int )( usAddress - usDiscreteInputStart ) / 8 ;    //每个寄存器存8个
-				iRegBitIndex = ( int )( usAddress - usDiscreteInputStart ) % 8 ;	   //相对于寄存器内部的位地址
+		while(iNReg > 0)
+		{
+			*pucRegBuffer++ = xMBUtilGetBits(&pucDiscreteInputBuf[iRegIndex++] , iRegBitIndex , 8);
+			iNReg --;
+		}
+		pucRegBuffer --;
+		usNDiscrete = usNDiscrete % 8;                      //余下的线圈数
+		*pucRegBuffer = *pucRegBuffer << (8 - usNDiscrete); //高位补零
+		*pucRegBuffer = *pucRegBuffer >> (8 - usNDiscrete);
+	}
+	else
+	{
+		eStatus = MB_ENOREG;
+	}
 
-
-					while( iNReg > 0 )
-					{
-						*pucRegBuffer++ = xMBUtilGetBits(&pucDiscreteInputBuf[iRegIndex++] , iRegBitIndex , 8);
-						iNReg --;
-					}
-					pucRegBuffer --;
-					usNDiscrete = usNDiscrete % 8;                     //余下的线圈数
-					*pucRegBuffer = *pucRegBuffer <<(8 - usNDiscrete); //高位补零
-					*pucRegBuffer = *pucRegBuffer >>(8 - usNDiscrete);
-	  }
-    
-    else
-    {
-        eStatus = MB_ENOREG;
-    }
-
-    return eStatus;
+	return eStatus;
 }
-
 
 //**********************************************************************************
 //函数定义: void Step(void)
@@ -326,61 +312,97 @@ eMBRegDiscreteCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNDiscrete )
 //备    注：
 //*******************************************************************************
 union LianHeTi test_data27;
-
 void Step(void)
-{
-//       if(GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_11)==1)
-		 if((!(ucSCoilBuf[0]&0x02))&&(GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_11)==1)&&(ucSCoilBuf[5]&0x01)) //非测试过程光栅检测是否有障碍物
+{	
+	//20206.17修改  02=0时对光栅标志位进行清0操作防止光栅时间有问题 
+	if(!(ucSCoilBuf[0] & 0x02))
+	{
+		TIM_ClearITPendingBit(TIM3, TIM_IT_Update);
+		TIM_ITConfig(TIM3, TIM_IT_Update, DISABLE);
+		TIM_SetCounter(TIM3, 0);
+		Timer3_cout = 0;
+	}
+	
+	//20206.17修改结束
+	//2021-3-19：光栅信号线改为常闭线，即信号为1时表示正常状态，信号为0时表示光栅失效或光栅检测到障碍物
+	if(ucSCoilBuf[5] & 0x01)
+	{
+		//2021-3-19：光栅信号线改为常闭线，即信号为1时表示正常状态，信号为0时表示光栅失效或光栅检测到障碍物
+		if((GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_11)==1))
 ////			if(GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_6)==1)
-		 {
-//				 GS_Flag=1;
-			 ucSCoilBuf[8]|=0x10;            //有障碍物
-//				LED_PURPLE;
-		 }		
-		 else
-		 {
-//				 GS_Flag=0;	
-			 ucSCoilBuf[8]&=0xef;            //没有障碍物
-		 }
-		if(ucSCoilBuf[0]&0x02)
 		{
-
-			TIM_ClearITPendingBit(TIM3, TIM_IT_Update);
-			TIM_ITConfig(TIM3, TIM_IT_Update, ENABLE);
-			printf("Timer3_cout:::%f \n",Timer3_cout);
-
-			TIM_Cmd(TIM3, ENABLE);
-			test_data27.value[0]=usSRegHoldBuf[34];
-			test_data27.value[1]=(usSRegHoldBuf[34]>>8);
-			test_data27.value[2]=usSRegHoldBuf[33];
-			test_data27.value[3]=(usSRegHoldBuf[33]>>8);
-			test_data27.d=test_data27.d*10;	
-			if((Timer3_cout<=test_data27.d)&&(GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_11)==1)&&(ucSCoilBuf[5]&0x01))//检测到障碍物
-			{
-				ucSCoilBuf[0]|=0x01; 
-				ucSCoilBuf[0]&=0xf1; 
-				ucSCoilBuf[7]&=0xfe;            //参数准备状态归零
-				TIM_ClearITPendingBit(TIM3, TIM_IT_Update);
-				TIM_ITConfig(TIM3, TIM_IT_Update, DISABLE);
-				TIM_SetCounter(TIM3, 0);
-					 Timer3_cout=0;
-
-			}
-
-			if(Timer3_cout>test_data27.d)
-			{
-
-				TIM_ClearITPendingBit(TIM3, TIM_IT_Update);
-				TIM_ITConfig(TIM3, TIM_IT_Update, DISABLE);
-				TIM_SetCounter(TIM3, 0);
-			}
-
+//			GS_Flag=1;
+			 ucSCoilBuf[8] &= 0xef;            //没有障碍物
+//			LED_PURPLE;
+		}		
+		else
+		{
+//			GS_Flag=0;	
+			ucSCoilBuf[8] |= 0x10;            //有障碍物
 		}
+		
+		if((ucSCoilBuf[0] & 0x02))
+		{		
+			if(ucSCoilBuf[0] & 0x04)//设备0_读写00003    判断循环开关
+			{
+				//2021-3-19：光栅信号线改为常闭线，即信号为1时表示正常状态，信号为0时表示光栅失效或光栅检测到障碍物
+				if((GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_11) == 0) && (ucSCoilBuf[5] & 0x01))//检测到障碍物
+				{ 
+					ucSCoilBuf[8] |= 0x10;            //有障碍物
+					relay11_OFF;//优先关闭动作1
+					ucSCoilBuf[4] &= 0xf7;//优先关闭动作1
+					ucSCoilBuf[0] |= 0x01; 
+					ucSCoilBuf[0] &= 0xf9; 
+					ucSCoilBuf[7] &= 0xfe;            //参数准备状态归零
+//					TIM_ClearITPendingBit(TIM3, TIM_IT_Update);
+//					TIM_ITConfig(TIM3, TIM_IT_Update, DISABLE);
+//					TIM_SetCounter(TIM3, 0);
+//					Timer3_cout=0;
+//					(void)eMBPoll();
+				}
+			}
+			else
+			{
+				TIM_ClearITPendingBit(TIM3, TIM_IT_Update);
+				TIM_ITConfig(TIM3, TIM_IT_Update, ENABLE);
+				//printf("Timer3_cout:::%f \n",Timer3_cout);
+				TIM_Cmd(TIM3, ENABLE);
+				test_data27.value[0] = usSRegHoldBuf[34];
+				test_data27.value[1] = (usSRegHoldBuf[34] >> 8);
+				test_data27.value[2] = usSRegHoldBuf[33];
+				test_data27.value[3] = (usSRegHoldBuf[33] >> 8);
+				test_data27.d = test_data27.d * 10;
+				
+				if((Timer3_cout <= test_data27.d) && (GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_11) == 0)
+					&& (ucSCoilBuf[5] & 0x01))//检测到障碍物
+				{
+					ucSCoilBuf[8] |= 0x10;            //有障碍物
+					relay11_OFF;//优先关闭动作1
+					ucSCoilBuf[4] &= 0xf7;//优先关闭动作1
+					ucSCoilBuf[0] |= 0x01; 
+					ucSCoilBuf[0] &= 0xf9; 
+					ucSCoilBuf[7] &= 0xfe;            //参数准备状态归零
+					TIM_ClearITPendingBit(TIM3, TIM_IT_Update);
+					TIM_ITConfig(TIM3, TIM_IT_Update, DISABLE);
+					TIM_SetCounter(TIM3, 0);
+					Timer3_cout = 0;				
+				}
+				
+				if(Timer3_cout > test_data27.d)
+				{
+					TIM_ClearITPendingBit(TIM3, TIM_IT_Update);
+					TIM_ITConfig(TIM3, TIM_IT_Update, DISABLE);
+					TIM_SetCounter(TIM3, 0);
+				}
+			}
+		}
+	}
+	else
+	{
+		ucSCoilBuf[8] &= 0xef;            //没有障碍物
+	}
 }
 
-
-
- 
 //**********************************************************************************
 //函数定义: void Press_Set(void)
 //描    述：非测试过程继电器控制
@@ -392,142 +414,134 @@ void  Relay_control(void)
 //	if(!(ucSCoilBuf[0]&0x20))
 //	{
 	
-
-		if((ucSCoilBuf[3]&0x01))
-		{
-			relay1_ON;
-		}
-		else 
-		{
-			relay1_OFF;
-		}
-		if((ucSCoilBuf[3]&0x02))
-		{
-			relay2_ON;
-		}
-		else 
-		{
-			relay2_OFF;
-		}
-		if((ucSCoilBuf[3]&0x04))
-		{
-			relay3_ON;
-		}
-		else 
-		{
-			relay3_OFF;
-		}
+	if((ucSCoilBuf[3] & 0x01))
+	{
+		relay1_ON;
+	}
+	else 
+	{
+		relay1_OFF;
+	}
+	
+	if((ucSCoilBuf[3] & 0x02))
+	{
+		relay2_ON;
+	}
+	else 
+	{
+		relay2_OFF;
+	}
+	
+	if((ucSCoilBuf[3] & 0x04))
+	{
+		relay3_ON;
+	}
+	else 
+	{
+		relay3_OFF;
+	}
+	
+	if((ucSCoilBuf[3] & 0x08))
+	{
+		relay4_ON;
+	}
+	else 
+	{
+		relay4_OFF;
+	}
+	
+	if((ucSCoilBuf[3] & 0x10))
+	{
+		relay5_ON;
+	}
+	else 
+	{
+		relay5_OFF;
+	}
+	
+	if((ucSCoilBuf[3] & 0x20))
+	{
+		relay6_ON;
+	}
+	else 
+	{
+		relay6_OFF;
+	}
+	
+	if((ucSCoilBuf[3] & 0x40))
+	{
+		relay7_ON;
+	}
+	else 
+	{
+		relay7_OFF;
+	}
+	
+	if((ucSCoilBuf[3] & 0x80))
+	{
+		relay8_ON;
+	}
+	else 
+	{
+		relay8_OFF;
+	}
 		
-		if((ucSCoilBuf[3]&0x08))
-		{
-			relay4_ON;
-		}
-		else 
-		{
-			relay4_OFF;
-		}
-		if((ucSCoilBuf[3]&0x10))
-		{
-			relay5_ON;
-		}
-		else 
-		{
-			relay5_OFF;
-		}
-		if((ucSCoilBuf[3]&0x20))
-		{
-			relay6_ON;
-		}
-		else 
-		{
-			relay6_OFF;
-		}
-		if((ucSCoilBuf[3]&0x40))
-		{
-			relay7_ON;
-		}
-		else 
-		{
-			relay7_OFF;
-		}
-		if((ucSCoilBuf[3]&0x80))
-		{
-			relay8_ON;
-		}
-		else 
-		{
-			relay8_OFF;
-		}
-//	  if(ucSCoilBuf[4]&0x01)
-//		{
-//			relay9_ON;
-//		}
-//		else 
-//		{
-//			relay9_OFF;
-//		}
-//		if(ucSCoilBuf[4]&0x02)
-//		{
-//			relay10_ON;
-//		}
-//		else 
-//		{
-//			relay10_OFF;
-//		}
-		///////////////////////////////////////////////////////////////////////////////////////
-		
-		if((ucSCoilBuf[4]&0x08))
-		{
-			relay11_ON;
-		}
-		else 
-		{
-			relay11_OFF;
-		}
-		if((ucSCoilBuf[4]&0x10))
-		{
-			relay12_ON;
-		}
-		else 
-		{
-			relay12_OFF;
-		}
-		if((ucSCoilBuf[4]&0x20))
-		{
-			relay13_ON;
-		}
-		else 
-		{
-			relay13_OFF;
-		}
-		if(ucSCoilBuf[4]&0x40)
-		{
-			relay14_ON;
-		}
-		else 
-		{
-			relay14_OFF;
-		}
-		if(ucSCoilBuf[4]&0x80)
-		{
-			TIM_ClearITPendingBit(TIM5, TIM_IT_Update);
-			TIM_ITConfig(TIM5, TIM_IT_Update, ENABLE);
-			TIM_Cmd(TIM5, ENABLE);
-			relay15_ON;
-		}
-		else 
-		{
-			relay15_OFF;
-		}
-		if(ucSCoilBuf[5]&0x01)
-		{
-			relay16_ON;
-		}
-		else 
-		{
-			relay16_OFF;
-		}
-
+	if((ucSCoilBuf[4] & 0x08))
+	{
+		relay11_ON;
+	}
+	else 
+	{
+		relay11_OFF;
+	}
+	
+	if((ucSCoilBuf[4] & 0x10))
+	{
+		relay12_ON;
+	}
+	else 
+	{
+		relay12_OFF;
+	}
+	
+	if((ucSCoilBuf[4] & 0x20))
+	{
+		relay13_ON;
+	}
+	else 
+	{
+		relay13_OFF;
+	}
+	
+	if(ucSCoilBuf[4] & 0x40)
+	{
+		relay14_ON;
+	}
+	else 
+	{
+		relay14_OFF;
+	}
+	
+	if(ucSCoilBuf[4] & 0x80)
+	{
+		TIM_ClearITPendingBit(TIM5, TIM_IT_Update);
+		TIM_ITConfig(TIM5, TIM_IT_Update, ENABLE);
+		TIM_Cmd(TIM5, ENABLE);
+		relay15_ON;
+	}
+	else 
+	{
+		relay15_OFF;
+	}
+	
+	if(ucSCoilBuf[5] & 0x01)
+	{
+		relay16_ON;
+	}
+	else 
+	{
+		relay16_OFF;
+	}
 }
 //**********************************************************************************
 //函数定义: void AUTO_ZERO(void)
@@ -538,16 +552,16 @@ void  Relay_control(void)
 uint16_t time=0;  //自动调零扫描次数
 void AUTO_ZERO(void)
 {
-	if(ucSCoilBuf[8]&0x01)
+	if(ucSCoilBuf[8] & 0x01)
 	{
 		time++;
-		if(time>2)
+		
+		if(time > 2)
 		{
-			time=0;
+			time = 0;
 			Setzero_Init();
-			time=0;
-			ucSCoilBuf[8]&=0xf0;
-
+			time = 0;
+			ucSCoilBuf[8] &= 0xf0;
 		}
 	}
 }

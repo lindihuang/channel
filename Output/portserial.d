@@ -1,8 +1,8 @@
 ..\..\output\portserial.o: ..\..\MODBUS\port\portserial.c
 ..\..\output\portserial.o: ..\..\MODBUS\port\port.h
-..\..\output\portserial.o: F:\study\XiLiYiQi\Keil5\ARM\ARMCC\Bin\..\include\assert.h
-..\..\output\portserial.o: F:\study\XiLiYiQi\Keil5\ARM\ARMCC\Bin\..\include\inttypes.h
-..\..\output\portserial.o: F:\study\XiLiYiQi\Keil5\ARM\ARMCC\Bin\..\include\stdint.h
+..\..\output\portserial.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\assert.h
+..\..\output\portserial.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\inttypes.h
+..\..\output\portserial.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 ..\..\output\portserial.o: ..\..\MODBUS\modbus\include\mb.h
 ..\..\output\portserial.o: ..\..\MODBUS\modbus\include\mbport.h
 ..\..\output\portserial.o: ..\..\MODBUS\modbus\include\mbproto.h
@@ -45,4 +45,4 @@
 ..\..\output\portserial.o: ..\..\Libraries\STM32F4xx_StdPeriph_Driver\inc\stm32f4xx_fmc.h
 ..\..\output\portserial.o: ..\..\Libraries\STM32F4xx_StdPeriph_Driver\inc\stm32f4xx_ltdc.h
 ..\..\output\portserial.o: ..\..\Libraries\STM32F4xx_StdPeriph_Driver\inc\stm32f4xx_sai.h
-..\..\output\portserial.o: F:\study\XiLiYiQi\Keil5\ARM\ARMCC\Bin\..\include\stdio.h
+..\..\output\portserial.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
