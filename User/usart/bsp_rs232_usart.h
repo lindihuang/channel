@@ -15,7 +15,7 @@
 
 #define _485_USART                             	USART3
 #define _485_USART_CLK                         	RCC_APB1Periph_USART3
-#define _485_USART_BAUDRATE                    	115200       //115200     //38400
+#define _485_USART_BAUDRATE                    	38400       //115200     //38400
 
 #define _485_USART_RX_GPIO_PORT                	GPIOB
 #define _485_USART_RX_GPIO_CLK                 	RCC_AHB1Periph_GPIOB
